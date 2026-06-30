@@ -1,17 +1,20 @@
-import sys
+import argparse
 from pathlib import Path
 
 
 def run(solve, output_path: Path | None = None):
-    if len(sys.argv) < 2:
-        print("Usage: python main.py <input_file> [output_file]")
-        sys.exit(1)
+    parser = argparse.ArgumentParser()
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("-i", "--input", help="input file")
+    group.add_argument("-t", "--text", help="raw input string")
+    parser.add_argument("-o", "--output", help="output file (default: stdout)")
+    args = parser.parse_args()
 
-    input_path = Path(sys.argv[1])
-    data = input_path.read_text().strip()
+    data = Path(args.input).read_text().strip() if args.input else args.text.strip()
+
     result = solve(data)
 
-    out = Path(sys.argv[2]) if len(sys.argv) >= 3 else output_path
+    out = Path(args.output) if args.output else output_path
     if out is None:
         print(result)
     else:
