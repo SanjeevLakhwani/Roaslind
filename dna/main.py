@@ -18,4 +18,4 @@ def solve_2(dna: str) -> str:
 
 
 if __name__ == "__main__":
-    run(Path(__file__).parent, solve_2)
+    run(solve_2)
