@@ -2,6 +2,18 @@ import argparse
 from pathlib import Path
 
 
+def fasta_to_dict(data: str) -> dict[str, str]:
+    d = {}
+    ak = None
+    for l in data.split('\n'):
+        if l.startswith('>'):
+            ak = l[1:]
+            d[ak] = ""
+        elif ak:
+            d[ak] += l
+    return d
+
+
 def run(solve, output_path: Path | None = None):
     parser = argparse.ArgumentParser()
     group = parser.add_mutually_exclusive_group(required=True)

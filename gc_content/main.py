@@ -1,15 +1,8 @@
-from utils import run
+from utils import run, fasta_to_dict
 
 
 def solve(data: str) -> str:
-    d = {}
-    ak = False
-    for l in data.split():
-        if l[0] == '>':
-            ak = l[1:]
-            d[ak] = ""
-        else:
-            d[ak] += l
+    d = fasta_to_dict(data)
 
     hk = ""
     hp = 0
