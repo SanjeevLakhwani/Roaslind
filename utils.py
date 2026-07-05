@@ -1,5 +1,19 @@
 import argparse
 from pathlib import Path
+from codon_table import codons
+
+
+def dna_to_rna(dna: str) -> str:
+    return dna.replace("T", "U")
+
+
+def rna_to_prot(rna: str) -> str:
+    out = ""
+    till = len(rna) - (len(rna) % 3)
+    for i in range(0, till, 3):
+        aa = codons.get(rna[i:i+3], "")
+        out += "X" if aa == "Stop" else aa
+    return out
 
 
 def fasta_to_dict(data: str) -> dict[str, str]:
