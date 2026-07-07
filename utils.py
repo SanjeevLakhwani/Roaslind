@@ -3,6 +3,10 @@ from pathlib import Path
 from codon_table import codons
 
 
+def revc(dna: str) -> str:
+    return dna.translate(str.maketrans("ATCG", "TAGC"))[::-1]
+
+
 def dna_to_rna(dna: str) -> str:
     return dna.replace("T", "U")
 
@@ -28,15 +32,23 @@ def fasta_to_dict(data: str) -> dict[str, str]:
     return d
 
 
-def run(solve, output_path: Path | None = None):
+def run(solve, output_path: Path | None = None,
+        default_input: str | Path | None = None, default_text: str | None = None):
     parser = argparse.ArgumentParser()
-    group = parser.add_mutually_exclusive_group(required=True)
+    group = parser.add_mutually_exclusive_group(required=default_input is None and default_text is None)
     group.add_argument("-i", "--input", help="input file")
     group.add_argument("-t", "--text", help="raw input string")
     parser.add_argument("-o", "--output", help="output file (default: stdout)")
     args = parser.parse_args()
 
-    data = Path(args.input).read_text().strip() if args.input else args.text.strip()
+    if args.input:
+        data = Path(args.input).read_text().strip()
+    elif args.text:
+        data = args.text.strip()
+    elif default_input is not None:
+        data = Path(default_input).read_text().strip()
+    else:
+        data = default_text.strip()
 
     result = solve(data)
 
